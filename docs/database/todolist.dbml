@@ -1,0 +1,74 @@
+table users {
+  id uuid [pk, not null]
+  email varchar(64) [not null, unique]
+  password varchar(127) [not null]
+  verified_at datetime [default: null]
+  created_at timestamp [default: `now()`, not null]
+  updated_at "datetime ON UPDATE CURRENT_TIMESTAMP" [not null, default: `now()`, note:'update time']
+}
+
+table user_verifications {
+  id uuid [pk, not null]
+  user_id uuid [not null]
+  code varchar(6) [not null]
+  created_at timestamp [default: `now()`]
+  expired_at datetime [default: null]
+}
+
+ref: user_verifications.user_id < users.id [update: cascade, delete: cascade]
+
+table tasks {
+  id uuid [pk, not null]
+  user_id uuid [not null]
+  title varchar(127) [not null]
+  content text
+  created_at timestamp [default: `now()`, not null]
+  updated_at "datetime ON UPDATE CURRENT_TIMESTAMP" [not null, default: `now()`, note:'update time']
+}
+
+ref: tasks.user_id < users.id [update: cascade, delete: cascade]
+
+table labels {
+  id uuid [pk, not null]
+  user_id uuid [not null]
+  title varchar(32)
+  color varchar(32)
+  created_at timestamp [default: `now()`, not null]
+  updated_at "datetime ON UPDATE CURRENT_TIMESTAMP" [not null, default: `now()`, note:'update time']
+}
+
+ref: labels.user_id < users.id [update: cascade, delete: cascade]
+
+table task_labels {
+  label_id uuid [not null, pk]
+  task_id uuid [not null, pk]
+}
+
+ref: task_labels.label_id < labels.id [update: cascade, delete: cascade]
+ref: task_labels.task_id < tasks.id [update: cascade, delete: cascade]
+
+enum FileCategoryEnum {
+  SUBMISSION
+  AVATAR
+}
+
+enum FileTypeEnum {
+  PICTURE
+  VIDEO
+  AUDIO
+  DOCUMENT
+}
+
+table files {
+  id uuid [pk, not null]
+  user_id uuid [not null]
+  submission_type FileCategoryEnum [default: 'SUBMISSION']
+  file_type FileTypeEnum [default: 'DOCUMENT']
+  mime varchar(64)
+  file_format varchar(64)
+  resource varchar(127)
+  created_at timestamp [default: `now()`, not null]
+  updated_at "datetime ON UPDATE CURRENT_TIMESTAMP" [not null, default: `now()`, note:'update time']
+}
+
+ref: files.user_id < users.id [update: cascade, delete: cascade]

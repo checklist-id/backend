@@ -1,0 +1,99 @@
+name: "release and deploy"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  unit-test:
+    name: "unit test"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v2
+      - name: "setup go"
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.19.3"
+      - name: running unit test
+        run: go test ./... -coverprofile=coverage.txt -covermode=atomic
+      - name: upload static analysis
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  release:
+    name: semantic release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Semantic GitHub Release
+        uses: go-semantic-release/action@v1.17.0
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+
+  image-build-push:
+    name: build and push image to ghcr.io
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    needs:
+      - release
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: image build
+        run: docker build -t backend .
+      - name: login to registry
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: push image to registry
+        env:
+          LATEST_VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/todolist-backend:latest
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          docker tag todolist-backend $IMAGE_ID
+          docker push $IMAGE_ID
+
+  deploy-aws:
+    name: deploy to ec2
+    runs-on: ubuntu-latest
+    needs:
+      - image-build-push
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: configure ssh
+        env:
+          SSH_USER: ${{ secrets.SSH_USERNAME }}
+          SSH_KEY: ${{ secrets.SSH_PEM }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/dev-1.pem
+          chmod 700 ~/.ssh/dev-1.pem
+          cat >> ~/.ssh/config << END
+          Host development 
+            Hostname $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/dev-1.pem
+            StrictHostKeyChecking=no
+          END
+      - name: connect ec2, pull and run container
+        # env:
+        #   PACKAGE_NAME: ghcr.io/serikat-kuli-ketik/backend-todolist:latest
+        #   WORKSPACE_DIR: ${{ secrets.WORKSPACE_DIR }}
+        run: ssh development '
+          sudo docker rm -f $(docker ps -aqf "name=todolist-be") || true &&
+          sudo docker pull ghcr.io/serikat-kuli-ketik/backend-todolist:latest &&
+          sudo docker run -dp 19020:8000 --name todolist-be ghcr.io/serikat-kuli-ketik/backend-todolist:latest'
+      - name: copy .env to container
+        run: ssh development '
+          sudo docker cp workspace/todolist-be/app.env todolist-be:/app/.'
+      - name: restart container
+        run: ssh development '
+          sudo docker restart todolist-be'
