@@ -54,9 +54,9 @@ jobs:
         env:
           LATEST_VERSION: ${{ github.event.release.tag_name }}
         run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/todolist-backend:latest
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/backend-todolist:latest
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          docker tag todolist-backend $IMAGE_ID
+          docker tag backend-todolist $IMAGE_ID
           docker push $IMAGE_ID
 
   deploy-aws:
