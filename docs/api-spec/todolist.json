@@ -1,0 +1,2490 @@
+{
+  "openapi": "3.0.0",
+  "x-stoplight": {
+    "id": "h2zkdp28njjkz"
+  },
+  "info": {
+    "title": "todolist-api",
+    "version": "1.0",
+    "description": "The todolist API is A RESTful PI created for handling the services of todolistapp (todolist.vercel.app), by skk-dev team. ",
+    "contact": {
+      "name": "Hamdan Yuwafi",
+      "url": "thisham.my.id",
+      "email": "yuwafi.hamdan365@gmail.com"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local API"
+    },
+    {
+      "url": "https://api.todolist.thisham.my.id",
+      "description": "Production API"
+    }
+  ],
+  "paths": {
+    "/auth/sign-in": {
+      "post": {
+        "summary": "Sign In",
+        "operationId": "post-auth-sign-in",
+        "description": "Sign in into a registered account. Authentication currently was based on email and password. The `email` must be the registered user's email in this app and the `password` key is the user password.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "youremail@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "mysecretpassword"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          },
+          "description": "The `email` key consists of the `youremail@example.com` format and the `password` key needs at least 8 characters."
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "\"token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ; path=/; secure; HttpOnly\""
+                },
+                "description": "Authentication cookie, in httpOnly."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_201Created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string",
+                          "example": "aaaaaaaa-0010-0012-0000aaaabbbbcccc"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "youremail@example.com"
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "example": [
+                                "email can't be empty",
+                                "email must be matched the documented format"
+                              ]
+                            },
+                            "password": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "example": [
+                                "password can't be empty",
+                                "password must be at least 8 characters"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/auth/sign-up": {
+      "post": {
+        "summary": "Sign Up",
+        "operationId": "post-auth-sign-up",
+        "description": "Sign up for the new user of this app.\n\nAuthentication currently was based on email and password. The `email` must be the registered user's email in this app and the `password` key is the user password.\n\nUser can upload the profile picture when register a new account.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "youremail@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "mysecretpassword"
+                  },
+                  "password_confirmation": {
+                    "type": "string",
+                    "example": "mysecretpassword"
+                  },
+                  "profile_picture": {
+                    "type": "string",
+                    "format": "binary",
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "email",
+                  "password",
+                  "password_confirmation"
+                ]
+              }
+            }
+          },
+          "description": "The `email` key consists of the `youremail@example.com` format and the `password` key needs at least 8 characters. Then, confirm password with filling the `password_confirmation` key with the same value as `password` key.\n\nYou can upload a picture at the `profile_picture` key."
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "\"token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ; path=/; secure; HttpOnly\""
+                },
+                "description": "Authentication cookie, in httpOnly."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_201Created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string",
+                          "example": "aaaaaaaa-0010-0012-0000aaaabbbbcccc"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "youremail@example.com"
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "array",
+                              "example": [
+                                "email can't be empty",
+                                "email must be matched the documented format",
+                                "email was used"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "password": {
+                              "type": "array",
+                              "example": [
+                                "password can't be empty",
+                                "password must be at least 8 characters",
+                                "password must be confirmed"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "password_confirmation": {
+                              "type": "array",
+                              "example": [
+                                "password confirmation can't be empty"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      },
+      "parameters": []
+    },
+    "/tasks": {
+      "get": {
+        "summary": "Get All Task",
+        "tags": [
+          "Task"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_200OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "aaaaaaaa-0010-0012-0010aaaabbbbccca"
+                          },
+                          "title": {
+                            "type": "string",
+                            "example": "Turu ..."
+                          },
+                          "labels": {
+                            "type": "array",
+                            "description": "Label of the task, contains title and color. So, data can be easily grouped.",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "example": "Backlog"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "example": "#8C8C8C",
+                                  "description": "Color saved as string, based on standard RGB colors."
+                                }
+                              }
+                            }
+                          },
+                          "nearest_reminder": {
+                            "type": "object",
+                            "description": "Only display a nearest reminder if set. It can be null if this is not set.",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "aaaaaaaa-0010-0012-1010aaaabbbbccca"
+                              },
+                              "datetime": {
+                                "type": "string",
+                                "example": "2022-11-26 13:59:59"
+                              },
+                              "repeat": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "interval": {
+                                "type": "integer",
+                                "example": 300
+                              }
+                            }
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2022-11-21 13:59:59"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2022-11-22 13:59:59"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-tasks",
+        "description": "When user logged in, all tasks can be found here. Although the task marked as backed in logs, WIP or done. ",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "required": true,
+            "description": "httpOnly"
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create a New Task",
+        "operationId": "post-tasks",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_201Created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Create a new task from scratch.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Turu ..."
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "いろはにほへと　ちりぬるを わかよたれそ　つねならむ うゐのおくやま　けふこえて あさきゆめみし　ゑひもせす"
+                  },
+                  "label_ids": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string",
+                      "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                    }
+                  },
+                  "reminders": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "datetime": {
+                          "type": "string",
+                          "example": "2022-11-26 13:59:59",
+                          "description": "Save the alarm. This datetime is a first repeat of the reminder. Even the `repeat` key has been set to 0 time, the `repeat` key will be automatically set to 1 time."
+                        },
+                        "repeat": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "interval": {
+                          "type": "integer",
+                          "example": 300,
+                          "description": "Interval stands for how many seconds between the reminders. It saved in integer of the second."
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "title"
+                ]
+              }
+            }
+          },
+          "description": "While the `title` as task summary, the task can be described in the `content` key. There also can add the labels by include the `label_id` at `label_ids` key, and set reminders by filling the `reminders` key."
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "tags": [
+          "Task"
+        ]
+      }
+    },
+    "/tasks/{task_id}": {
+      "get": {
+        "summary": "Get a Task by Task ID",
+        "tags": [
+          "Task"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_200OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "Turu ..."
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "いろはにほへと　ちりぬるを わかよたれそ　つねならむ うゐのおくやま　けふこえて あさきゆめみし　ゑひもせす"
+                        },
+                        "labels": {
+                          "type": "array",
+                          "description": "Label of the task, contains title and color. So, data can be easily grouped.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                              },
+                              "title": {
+                                "type": "string",
+                                "example": "Backlog"
+                              },
+                              "color": {
+                                "type": "string",
+                                "example": "#8C8C8C",
+                                "description": "Color saved as string, based on standard RGB colors."
+                              }
+                            }
+                          }
+                        },
+                        "reminders": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "aaaaaaaa-0010-0012-1010aaaabbbbccca"
+                              },
+                              "datetime": {
+                                "type": "string",
+                                "example": "2022-11-26 13:59:59"
+                              },
+                              "repeat": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "interval": {
+                                "type": "integer",
+                                "example": 300
+                              }
+                            }
+                          }
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2022-11-21 13:59:59"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2022-11-22 13:59:59"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_404NotFound"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-tasks-task_id",
+        "description": "Detailed task can be found here.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "required": true,
+            "description": "httpOnly"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+          },
+          "name": "task_id",
+          "in": "path",
+          "required": true,
+          "description": "The selected task will be showed, updated or deleted"
+        }
+      ],
+      "put": {
+        "summary": "Update Whole Content of Task by Task ID",
+        "operationId": "put-tasks-task_id",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "array",
+                            "example": [
+                              "title can't be blank"
+                            ],
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_404NotFound"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "tags": [
+          "Task"
+        ],
+        "description": "Handle change of the task, such description and title, much huge update of the task detail. Also change the reminders and labels.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Turu ..."
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "いろはにほへと　ちりぬるを わかよたれそ　つねならむ うゐのおくやま　けふこえて あさきゆめみし　ゑひもせす"
+                  },
+                  "label_ids": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string",
+                      "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                    }
+                  },
+                  "reminders": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "datetime": {
+                          "type": "string",
+                          "example": "2022-11-26 13:59:59",
+                          "description": "Save the alarm. This datetime is a first repeat of the reminder. Even the `repeat` key has been set to 0 time, the `repeat` key will be automatically set to 1 time."
+                        },
+                        "repeat": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "interval": {
+                          "type": "integer",
+                          "example": 300,
+                          "description": "Interval stands for how many seconds between the reminders. It saved in integer of the second."
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "title"
+                ]
+              }
+            }
+          },
+          "description": "While the `title` as task summary, the task can be described in the `content` key. There also can add the labels by include the `label_id` at `label_ids` key, and set reminders by filling the `reminders` key."
+        }
+      },
+      "delete": {
+        "summary": "Delete Task by Task ID",
+        "operationId": "delete-tasks-task_id",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_404NotFound"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "When something clueless, let's delete the task and take a rest :)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "tags": [
+          "Task"
+        ]
+      }
+    },
+    "/labels": {
+      "get": {
+        "summary": "Get All Labels of the Current User",
+        "tags": [
+          "Labeling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_200OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                          },
+                          "title": {
+                            "type": "string",
+                            "example": "Penting Sekali"
+                          },
+                          "color": {
+                            "type": "string",
+                            "example": "#FF7842",
+                            "description": "User can custom the color of label. The color is stored in a standard RGB color string."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_501Unimplemented"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-labels",
+        "description": "Categorize the tasks with the labels. As for default, per register user, application will be generated a few default labels, such as `Backlog`, `WIP` and `Done`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Add a New Label for the Current User",
+        "operationId": "post-labels",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_201Created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "title can't be blank"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Create a label to categorize your task.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "description": "User can custom the color of label. The color is stored in a standard RGB color string. Don't forget to add `#` before submitting this value."
+                  }
+                },
+                "required": [
+                  "title",
+                  "color"
+                ]
+              }
+            }
+          },
+          "description": "This is a form to set the label title. Generally, user will be inputted the title under 20 characters. And, user had the ability to give a color each label."
+        },
+        "tags": [
+          "Labeling"
+        ]
+      }
+    },
+    "/labels/{label_id}": {
+      "get": {
+        "summary": "Get Detail Label by Label ID",
+        "tags": [
+          "Labeling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_200OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                        },
+                        "title": {
+                          "type": "string",
+                          "example": "Penting Sekali"
+                        },
+                        "color": {
+                          "type": "string",
+                          "example": "#FF7842",
+                          "description": "User can custom the color of label. The color is stored in a standard RGB color string."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_404NotFound"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_501Unimplemented"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-labels-label_id",
+        "description": "Categorize the tasks with the labels. As for default, per register user, application will be generated a few default labels, such as `Backlog`, `WIP` and `Done`.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+          },
+          "name": "label_id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the label which will be seen in detail, updated or deleted."
+        }
+      ],
+      "put": {
+        "summary": "Update a Label Based on Label ID",
+        "operationId": "put-labels-label_id",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "title can't be blank"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_404NotFound"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "description": "User can custom the color of label. The color is stored in a standard RGB color string. Don't forget to add `#` before submitting this value."
+                  }
+                },
+                "required": [
+                  "title",
+                  "color"
+                ]
+              }
+            }
+          },
+          "description": "This is a form to set the label title. Generally, user will be inputted the title under 20 characters. And, user had the ability to give a color each label."
+        },
+        "description": "Update the current label of the user who logged in. There, user are able to update the label color too.",
+        "tags": [
+          "Labeling"
+        ]
+      },
+      "delete": {
+        "summary": "Delete a Label by Label ID",
+        "operationId": "delete-labels-label_id",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_404NotFound"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "description": "If the label isn't needed again, user was able to remove it. With this action of deletion, the task marked of this label won't deleted. But, if the task was a single labeled and the label was removed, it turned into a task with no label.",
+        "tags": [
+          "Labeling"
+        ]
+      }
+    },
+    "/tasks/{task_id}/labels": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "task_id",
+          "in": "path",
+          "required": true,
+          "description": "The selected task will be patched."
+        }
+      ],
+      "patch": {
+        "summary": "Change Task Label by Task ID of Current User",
+        "operationId": "patch-tasks-task_id-labels",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Change the current task label. Based on user ID, task ID and label ID.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "label_ids": {
+                    "type": "array",
+                    "description": "Leave it blank if you wanna delete all label of the task. But beware, the WIPs, Done, Backlog are labels too. If you remove it, you will leave the task with no label and status.",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description": "The user ID will be extracted from session information. Task ID will be extracted from the URL params. But, we still need the label IDs of the task."
+        },
+        "tags": [
+          "Task"
+        ]
+      }
+    },
+    "/tasks/{task_id}/reminders": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "task_id",
+          "in": "path",
+          "required": true,
+          "description": "The selected task will be patched."
+        }
+      ],
+      "patch": {
+        "summary": "Change Task Label by Task ID of Current User",
+        "operationId": "patch-tasks-task_id-reminders",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Change the current task label. Based on user ID, task ID and label ID.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reminders": {
+                    "type": "array",
+                    "description": "Leave it blank if you wanna delete all label of the task. But beware, the WIPs, Done, Backlog are labels too. If you remove it, you will leave the task with no label and status.",
+                    "nullable": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "datetime": {
+                          "type": "string",
+                          "example": "2022-11-26 13:59:59",
+                          "description": "Save the alarm. This datetime is a first repeat of the reminder. Even the `repeat` key has been set to 0 time, the `repeat` key will be automatically set to 1 time."
+                        },
+                        "repeat": {
+                          "type": "integer",
+                          "example": 3
+                        },
+                        "interval": {
+                          "type": "integer",
+                          "example": 300,
+                          "description": "Interval stands for how many seconds between the reminders. It saved in integer of the second."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description": "The user ID will be extracted from session information. Task ID will be extracted from the URL params. But, we still need the label IDs of the task."
+        },
+        "tags": [
+          "Task"
+        ]
+      }
+    },
+    "/profile": {
+      "get": {
+        "summary": "Get User Profile",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_200OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "youremail@example.com"
+                        },
+                        "profile_picture": {
+                          "type": "string",
+                          "example": "https://images.unsplash.com/photo-1563288629-92c1b1ab05fe"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-profile",
+        "description": "Get current data from user profile, based on login cookie.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update User Profile",
+        "operationId": "patch-profile",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "array",
+                          "example": [
+                            "email can't be empty",
+                            "email must be matched the documented format",
+                            "email was used"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Update the current signed in user, currently only email.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "youremail@example.com"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          },
+          "description": "The `email` key consists of the `youremail@example.com` format."
+        }
+      }
+    },
+    "/profile/password": {
+      "patch": {
+        "summary": "Patch Current User Password",
+        "operationId": "patch-profile-password",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "old_password": {
+                          "type": "array",
+                          "example": [
+                            "the old password didn't match with the current password",
+                            "password can't be empty"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "new_password": {
+                          "type": "array",
+                          "example": [
+                            "new password can't be empty",
+                            "new password must be at least 8 characters",
+                            "new password must be confirmed"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "new_password_confirmation": {
+                          "type": "array",
+                          "example": [
+                            "new password confirmation can't be empty"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Patch the password of current signed in user.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "old_password": {
+                    "type": "string",
+                    "example": "myoldpassword"
+                  },
+                  "new_password": {
+                    "type": "string",
+                    "example": "mysecretpassword"
+                  },
+                  "new_password_confirmation": {
+                    "type": "string",
+                    "example": "mysecretpassword"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Change the current set password. Fill the `old_password` with your current password. Then, fill the `new_password` with the new one. Lastly, repeat the new password in the `new_password_confirmation` field."
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/profile/avatar": {
+      "patch": {
+        "summary": "Patch Current User Avatar",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "default": ""
+                  }
+                }
+              }
+            }
+          },
+          "description": "Change the current avatar. Upload your avatar at `avatar` column. It's accept image files, such as jpg and png."
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "patch-profile-avatar",
+        "description": "Update the current signed in user avatar (profile picture).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/auth/sign-out": {
+      "get": {
+        "summary": "Sign Out from Current User",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-auth-sign-out",
+        "description": "Sign out from current account. Automatically remove the auth cookies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/auth/verify": {
+      "get": {
+        "summary": "Resend Verification Email of New Account",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_200OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "verify": {
+                          "type": "array",
+                          "example": [
+                            "account was verified before"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-auth-verify",
+        "description": "Verify a newly registered account. ",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ]
+      },
+      "post": {
+        "summary": "Verify Account of New Account",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_200OK"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "post-auth-verify",
+        "description": "Verify a newly registered account. ",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "782494"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Code is a 6-digit numeric code. The code can be get in email."
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+            },
+            "in": "cookie",
+            "name": "token",
+            "description": "httpOnly",
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Meta_200OK": {
+        "title": "Meta_200OK",
+        "x-stoplight": {
+          "id": "vek7yruai96l9"
+        },
+        "type": "object",
+        "description": "Response meta of http code 200.",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": 200
+              },
+              "message": {
+                "type": "string",
+                "example": "OK"
+              }
+            }
+          }
+        }
+      },
+      "Meta_201Created": {
+        "title": "Meta_201Created",
+        "x-stoplight": {
+          "id": "fjrxtttuyix4n"
+        },
+        "type": "object",
+        "description": "Response meta when created a new data.",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 201
+              },
+              "message": {
+                "type": "string",
+                "example": "Created"
+              }
+            }
+          }
+        }
+      },
+      "Meta_400BadRequest": {
+        "title": "Meta_400BadRequest",
+        "x-stoplight": {
+          "id": "a4p7jfz6o738r"
+        },
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 400
+              },
+              "message": {
+                "type": "string",
+                "example": "Bad Request"
+              }
+            }
+          }
+        },
+        "description": "Response when backend received invalid data."
+      },
+      "Meta_401Unauthorized": {
+        "title": "Meta_401Unauthorized",
+        "x-stoplight": {
+          "id": "zonmj95h5k1mw"
+        },
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 401
+              },
+              "message": {
+                "type": "string",
+                "example": "Unauthorized"
+              }
+            }
+          }
+        },
+        "description": "Response when accessed endpoint with no authentication."
+      },
+      "Meta_403Forbidden": {
+        "title": "Meta_403Forbidden",
+        "x-stoplight": {
+          "id": "0xuw3a3xqut3q"
+        },
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 403
+              },
+              "message": {
+                "type": "string",
+                "example": "Forbidden"
+              }
+            }
+          }
+        },
+        "description": "Meta given when accessed endpoint with no authority."
+      },
+      "Meta_404NotFound": {
+        "title": "Meta_404NotFound",
+        "x-stoplight": {
+          "id": "rhymnmchgv3cw"
+        },
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 404
+              },
+              "message": {
+                "type": "string",
+                "example": "Not Found"
+              }
+            }
+          }
+        },
+        "description": "Meta given when accessed imaginary data."
+      },
+      "Meta_500InternalServerError": {
+        "title": "Meta_500InternalServerError",
+        "x-stoplight": {
+          "id": "6c2cgvq65j5dn"
+        },
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 500
+              },
+              "message": {
+                "type": "string",
+                "example": "Internal Server Error"
+              }
+            }
+          }
+        },
+        "description": "Meta given when accessed endpoint getting error on server."
+      },
+      "Meta_501Unimplemented": {
+        "title": "Meta_501Unimplemented",
+        "x-stoplight": {
+          "id": "z2sunlscou5yl"
+        },
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "number",
+                "example": 501
+              },
+              "message": {
+                "type": "string",
+                "example": "Unimplemented"
+              }
+            }
+          }
+        },
+        "description": "Meta given when accessing imaginary endpoint(s)."
+      }
+    },
+    "securitySchemes": {}
+  },
+  "tags": [
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Labeling"
+    },
+    {
+      "name": "Task"
+    },
+    {
+      "name": "User"
+    }
+  ]
+}
