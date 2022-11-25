@@ -49,7 +49,7 @@ jobs:
       - name: image build
         run: docker build -t backend .
       - name: login to registry
-        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+        run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GH_USERNAME }} --password-stdin
       - name: push image to registry
         env:
           LATEST_VERSION: ${{ github.event.release.tag_name }}
