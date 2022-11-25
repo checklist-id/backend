@@ -86,12 +86,12 @@ jobs:
         #   PACKAGE_NAME: ghcr.io/serikat-kuli-ketik/backend-todolist:latest
         #   WORKSPACE_DIR: ${{ secrets.WORKSPACE_DIR }}
         run: ssh development '
-          sudo docker rm -f $(docker ps -aqf "name=todolist") || true &&
+          sudo docker rm -f $(docker ps -aqf "name=todolist-be") || true &&
           sudo docker pull ghcr.io/serikat-kuli-ketik/backend-todolist:latest &&
-          sudo docker run -dp 19020:8000 --name todolist ghcr.io/serikat-kuli-ketik/backend-todolist:latest'
+          sudo docker run -dp 19020:8000 --name todolist-be ghcr.io/serikat-kuli-ketik/backend-todolist:latest'
       - name: copy .env to container
         run: ssh development '
-          sudo docker cp workspace/todolist-be/app.env todolist:/app/.'
+          sudo docker cp workspace/todolist-be/app.env todolist-be:/app/.'
       - name: restart container
         run: ssh development '
-          sudo docker restart todolist'
+          sudo docker restart todolist-be'
