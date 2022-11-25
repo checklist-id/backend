@@ -19,6 +19,8 @@ jobs:
         run: go test ./... -coverprofile=coverage.txt -covermode=atomic
       - name: upload static analysis
         uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     name: semantic release
