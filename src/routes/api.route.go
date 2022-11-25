@@ -1,5 +1,6 @@
 package routes
 
-func (r *Router) ConstructAPI() *Router {
-	return r
+import "github.com/labstack/echo/v4"
+
+func ConstructAPI(route *echo.Echo) {
 }

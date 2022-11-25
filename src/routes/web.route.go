@@ -2,13 +2,13 @@ package routes
 
 import (
 	"skk-backend-todolist/src/app"
+
+	"github.com/labstack/echo/v4"
 )
 
-func (r *Router) ConstructWeb() *Router {
+func ConstructWeb(route *echo.Echo) {
 	var feature = app.Construct()
 
-	r.route.GET("/docs", feature.Stoplight.GetAPISpec)
-	r.route.GET("/assets/apispec.json", feature.Stoplight.ServeDocsFile)
-
-	return r
+	route.GET("/docs", feature.Stoplight.GetAPISpec)
+	route.GET("/assets/apispec.json", feature.Stoplight.ServeDocsFile)
 }
