@@ -91,7 +91,7 @@ jobs:
           sudo docker run -dp 19020:8000 --name todolist ghcr.io/serikat-kuli-ketik/backend-todolist:latest'
       - name: copy .env to container
         run: ssh development '
-          sudo docker cp workspace/backend/app.env todolist:/app/.'
+          sudo docker cp workspace/todolist-be/app.env todolist:/app/.'
       - name: restart container
         run: ssh development '
           sudo docker restart todolist'
