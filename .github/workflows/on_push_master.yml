@@ -47,7 +47,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: image build
-        run: docker build -t backend .
+        run: docker build -t backend-todolist .
       - name: login to registry
         run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GH_USERNAME }} --password-stdin
       - name: push image to registry
