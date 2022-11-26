@@ -22,7 +22,7 @@
       "description": "Local API"
     },
     {
-      "url": "http://localhost:19000",
+      "url": "http://localhost:19020",
       "description": "Local Docker API"
     },
     {
@@ -75,29 +75,33 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_201Created"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "user_id": {
-                          "type": "string",
-                          "example": "aaaaaaaa-0010-0012-0000aaaabbbbcccc"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "youremail@example.com"
-                        },
-                        "token": {
-                          "type": "string",
-                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "user_id": {
+                              "type": "string",
+                              "example": "aaaaaaaa-0010-0012-0000aaaabbbbcccc"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "youremail@example.com"
+                            },
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -107,51 +111,77 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "errors": {
+                        "data": {
                           "type": "object",
                           "properties": {
-                            "email": {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              },
-                              "example": [
-                                "email can't be empty",
-                                "email must be matched the documented format"
-                              ]
-                            },
-                            "password": {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              },
-                              "example": [
-                                "password can't be empty",
-                                "password must be at least 8 characters"
-                              ]
+                            "errors": {
+                              "type": "object",
+                              "properties": {
+                                "email": {
+                                  "type": "array",
+                                  "example": [
+                                    "email can't be empty",
+                                    "email must be matched the documented format"
+                                  ],
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "password": {
+                                  "type": "array",
+                                  "example": [
+                                    "password can't be empty",
+                                    "password must be at least 8 characters"
+                                  ],
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
                             }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -213,29 +243,33 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_201Created"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "user_id": {
-                          "type": "string",
-                          "example": "aaaaaaaa-0010-0012-0000aaaabbbbcccc"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "youremail@example.com"
-                        },
-                        "token": {
-                          "type": "string",
-                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "user_id": {
+                              "type": "string",
+                              "example": "aaaaaaaa-0010-0012-0000aaaabbbbcccc"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "youremail@example.com"
+                            },
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTY5MTUyMjQsImp0aSI6ImFhYWFhYWFhLTAwMTAtMDAxMi0wMDAwYWFhYWJiYmJjY2NjIiwiZW1haWwiOiJ5b3VyZW1haWxAZXhhbXBsZS5jb20ifQ.XR_gIrhbPYbTX6P2op970kfdaJ9OP-RAuJ2UV9N6rXQ"
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -245,59 +279,74 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "errors": {
+                        "data": {
                           "type": "object",
                           "properties": {
-                            "email": {
-                              "type": "array",
-                              "example": [
-                                "email can't be empty",
-                                "email must be matched the documented format",
-                                "email was used"
-                              ],
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            "password": {
-                              "type": "array",
-                              "example": [
-                                "password can't be empty",
-                                "password must be at least 8 characters",
-                                "password must be confirmed"
-                              ],
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            "password_confirmation": {
-                              "type": "array",
-                              "example": [
-                                "password confirmation can't be empty"
-                              ],
-                              "items": {
-                                "type": "string"
+                            "errors": {
+                              "type": "object",
+                              "properties": {
+                                "email": {
+                                  "type": "array",
+                                  "example": [
+                                    "email can't be empty",
+                                    "email must be matched the documented format",
+                                    "email was used"
+                                  ],
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "password": {
+                                  "type": "array",
+                                  "example": [
+                                    "password can't be empty",
+                                    "password must be at least 8 characters",
+                                    "password must be confirmed"
+                                  ],
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "password_confirmation": {
+                                  "type": "array",
+                                  "example": [
+                                    "password confirmation can't be empty"
+                                  ],
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
                               }
                             }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
+                    }
+                  ]
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -318,80 +367,84 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_200OK"
                     },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "example": "aaaaaaaa-0010-0012-0010aaaabbbbccca"
-                          },
-                          "title": {
-                            "type": "string",
-                            "example": "Turu ..."
-                          },
-                          "labels": {
-                            "type": "array",
-                            "description": "Label of the task, contains title and color. So, data can be easily grouped.",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "string",
-                                  "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
-                                },
-                                "title": {
-                                  "type": "string",
-                                  "example": "Backlog"
-                                },
-                                "color": {
-                                  "type": "string",
-                                  "example": "#8C8C8C",
-                                  "description": "Color saved as string, based on standard RGB colors."
-                                }
-                              }
-                            }
-                          },
-                          "nearest_reminder": {
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
                             "type": "object",
-                            "description": "Only display a nearest reminder if set. It can be null if this is not set.",
                             "properties": {
                               "id": {
                                 "type": "string",
-                                "example": "aaaaaaaa-0010-0012-1010aaaabbbbccca"
+                                "example": "aaaaaaaa-0010-0012-0010aaaabbbbccca"
                               },
-                              "datetime": {
+                              "title": {
                                 "type": "string",
-                                "example": "2022-11-26 13:59:59"
+                                "example": "Turu ..."
                               },
-                              "repeat": {
-                                "type": "integer",
-                                "example": 3
+                              "labels": {
+                                "type": "array",
+                                "description": "Label of the task, contains title and color. So, data can be easily grouped.",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                                    },
+                                    "title": {
+                                      "type": "string",
+                                      "example": "Backlog"
+                                    },
+                                    "color": {
+                                      "type": "string",
+                                      "example": "#8C8C8C",
+                                      "description": "Color saved as string, based on standard RGB colors."
+                                    }
+                                  }
+                                }
                               },
-                              "interval": {
-                                "type": "integer",
-                                "example": 300
+                              "nearest_reminder": {
+                                "type": "object",
+                                "description": "Only display a nearest reminder if set. It can be null if this is not set.",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "example": "aaaaaaaa-0010-0012-1010aaaabbbbccca"
+                                  },
+                                  "datetime": {
+                                    "type": "string",
+                                    "example": "2022-11-26 13:59:59"
+                                  },
+                                  "repeat": {
+                                    "type": "integer",
+                                    "example": 3
+                                  },
+                                  "interval": {
+                                    "type": "integer",
+                                    "example": 300
+                                  }
+                                }
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "example": "2022-11-21 13:59:59"
+                              },
+                              "updated_at": {
+                                "type": "string",
+                                "example": "2022-11-22 13:59:59"
                               }
                             }
-                          },
-                          "created_at": {
-                            "type": "string",
-                            "example": "2022-11-21 13:59:59"
-                          },
-                          "updated_at": {
-                            "type": "string",
-                            "example": "2022-11-22 13:59:59"
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -451,20 +504,74 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_201Created"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "id": {
-                          "type": "string"
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "array",
+                                "example": [
+                                  "title can't be empty"
+                                ],
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                    }
+                  ]
                 }
               }
             }
@@ -554,83 +661,87 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_200OK"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
-                        },
-                        "title": {
-                          "type": "string",
-                          "example": "Turu ..."
-                        },
-                        "content": {
-                          "type": "string",
-                          "example": "いろはにほへと　ちりぬるを わかよたれそ　つねならむ うゐのおくやま　けふこえて あさきゆめみし　ゑひもせす"
-                        },
-                        "labels": {
-                          "type": "array",
-                          "description": "Label of the task, contains title and color. So, data can be easily grouped.",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
-                              },
-                              "title": {
-                                "type": "string",
-                                "example": "Backlog"
-                              },
-                              "color": {
-                                "type": "string",
-                                "example": "#8C8C8C",
-                                "description": "Color saved as string, based on standard RGB colors."
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                            },
+                            "title": {
+                              "type": "string",
+                              "example": "Turu ..."
+                            },
+                            "content": {
+                              "type": "string",
+                              "example": "いろはにほへと　ちりぬるを わかよたれそ　つねならむ うゐのおくやま　けふこえて あさきゆめみし　ゑひもせす"
+                            },
+                            "labels": {
+                              "type": "array",
+                              "description": "Label of the task, contains title and color. So, data can be easily grouped.",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                                  },
+                                  "title": {
+                                    "type": "string",
+                                    "example": "Backlog"
+                                  },
+                                  "color": {
+                                    "type": "string",
+                                    "example": "#8C8C8C",
+                                    "description": "Color saved as string, based on standard RGB colors."
+                                  }
+                                }
                               }
+                            },
+                            "reminders": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "example": "aaaaaaaa-0010-0012-1010aaaabbbbccca"
+                                  },
+                                  "datetime": {
+                                    "type": "string",
+                                    "example": "2022-11-26 13:59:59"
+                                  },
+                                  "repeat": {
+                                    "type": "integer",
+                                    "example": 3
+                                  },
+                                  "interval": {
+                                    "type": "integer",
+                                    "example": 300
+                                  }
+                                }
+                              }
+                            },
+                            "created_at": {
+                              "type": "string",
+                              "example": "2022-11-21 13:59:59"
+                            },
+                            "updated_at": {
+                              "type": "string",
+                              "example": "2022-11-22 13:59:59"
                             }
                           }
-                        },
-                        "reminders": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "example": "aaaaaaaa-0010-0012-1010aaaabbbbccca"
-                              },
-                              "datetime": {
-                                "type": "string",
-                                "example": "2022-11-26 13:59:59"
-                              },
-                              "repeat": {
-                                "type": "integer",
-                                "example": 3
-                              },
-                              "interval": {
-                                "type": "integer",
-                                "example": 300
-                              }
-                            }
-                          }
-                        },
-                        "created_at": {
-                          "type": "string",
-                          "example": "2022-11-21 13:59:59"
-                        },
-                        "updated_at": {
-                          "type": "string",
-                          "example": "2022-11-22 13:59:59"
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -640,12 +751,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -655,12 +765,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_404NotFound"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -670,12 +779,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -720,29 +828,33 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "array",
-                            "example": [
-                              "title can't be blank"
-                            ],
-                            "items": {
-                              "type": "string"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "array",
+                                "example": [
+                                  "title can't be empty"
+                                ],
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
                             }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -752,12 +864,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -767,12 +878,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_404NotFound"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -782,12 +892,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -876,12 +985,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -891,12 +999,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_404NotFound"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -906,12 +1013,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -947,33 +1053,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_200OK"
                     },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
-                          },
-                          "title": {
-                            "type": "string",
-                            "example": "Penting Sekali"
-                          },
-                          "color": {
-                            "type": "string",
-                            "example": "#FF7842",
-                            "description": "User can custom the color of label. The color is stored in a standard RGB color string."
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                              },
+                              "title": {
+                                "type": "string",
+                                "example": "Penting Sekali"
+                              },
+                              "color": {
+                                "type": "string",
+                                "example": "#FF7842",
+                                "description": "User can custom the color of label. The color is stored in a standard RGB color string."
+                              }
+                            }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -983,12 +1093,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -998,12 +1107,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta_501Unimplemented"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1033,21 +1141,25 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_201Created"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1057,27 +1169,31 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta_401Unauthorized"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "example": "title can't be blank"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "example": "title can't be blank"
+                                }
+                              }
                             }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1087,12 +1203,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1102,12 +1217,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1166,30 +1280,34 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_200OK"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
-                        },
-                        "title": {
-                          "type": "string",
-                          "example": "Penting Sekali"
-                        },
-                        "color": {
-                          "type": "string",
-                          "example": "#FF7842",
-                          "description": "User can custom the color of label. The color is stored in a standard RGB color string."
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                            },
+                            "title": {
+                              "type": "string",
+                              "example": "Penting Sekali"
+                            },
+                            "color": {
+                              "type": "string",
+                              "example": "#FF7842",
+                              "description": "User can custom the color of label. The color is stored in a standard RGB color string."
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1199,12 +1317,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1279,27 +1396,31 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "errors": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "title": {
-                            "type": "array",
-                            "items": {
-                              "type": "string",
-                              "example": "title can't be blank"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "example": "title can't be blank"
+                                }
+                              }
                             }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1309,12 +1430,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1324,12 +1444,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_404NotFound"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1339,12 +1458,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1369,10 +1487,12 @@
                 "type": "object",
                 "properties": {
                   "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Sangat Penting"
                   },
                   "color": {
                     "type": "string",
+                    "example": "#FF6653",
                     "description": "User can custom the color of label. The color is stored in a standard RGB color string. Don't forget to add `#` before submitting this value."
                   }
                 },
@@ -1402,12 +1522,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1417,12 +1536,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_404NotFound"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1432,12 +1550,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1485,12 +1602,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1500,12 +1616,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1573,12 +1688,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1588,12 +1702,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1665,29 +1778,33 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_200OK"
                     },
-                    "data": {
+                    {
                       "type": "object",
                       "properties": {
-                        "id": {
-                          "type": "string",
-                          "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
-                        },
-                        "email": {
-                          "type": "string",
-                          "example": "youremail@example.com"
-                        },
-                        "profile_picture": {
-                          "type": "string",
-                          "example": "https://images.unsplash.com/photo-1563288629-92c1b1ab05fe"
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "aaaaaaaa-0010-0012-1100aaaabbbbccca"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "youremail@example.com"
+                            },
+                            "profile_picture": {
+                              "type": "string",
+                              "example": "https://images.unsplash.com/photo-1563288629-92c1b1ab05fe"
+                            }
+                          }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1697,12 +1814,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1712,12 +1828,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1750,28 +1865,32 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "errors": {
+                    {
                       "type": "object",
                       "properties": {
-                        "email": {
-                          "type": "array",
-                          "example": [
-                            "email can't be empty",
-                            "email must be matched the documented format",
-                            "email was used"
-                          ],
-                          "items": {
-                            "type": "string"
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "array",
+                              "example": [
+                                "email can't be empty",
+                                "email must be matched the documented format",
+                                "email was used"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1781,12 +1900,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1796,12 +1914,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1857,47 +1974,51 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "errors": {
+                    {
                       "type": "object",
                       "properties": {
-                        "old_password": {
-                          "type": "array",
-                          "example": [
-                            "the old password didn't match with the current password",
-                            "password can't be empty"
-                          ],
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "new_password": {
-                          "type": "array",
-                          "example": [
-                            "new password can't be empty",
-                            "new password must be at least 8 characters",
-                            "new password must be confirmed"
-                          ],
-                          "items": {
-                            "type": "string"
-                          }
-                        },
-                        "new_password_confirmation": {
-                          "type": "array",
-                          "example": [
-                            "new password confirmation can't be empty"
-                          ],
-                          "items": {
-                            "type": "string"
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "old_password": {
+                              "type": "array",
+                              "example": [
+                                "the old password didn't match with the current password",
+                                "password can't be empty"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "new_password": {
+                              "type": "array",
+                              "example": [
+                                "new password can't be empty",
+                                "new password must be at least 8 characters",
+                                "new password must be confirmed"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "new_password_confirmation": {
+                              "type": "array",
+                              "example": [
+                                "new password confirmation can't be empty"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1907,12 +2028,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -1922,12 +2042,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2007,12 +2126,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2022,12 +2140,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2064,12 +2181,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2103,12 +2219,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_200OK"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2118,26 +2233,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
                     },
-                    "errors": {
+                    {
                       "type": "object",
                       "properties": {
-                        "verify": {
-                          "type": "array",
-                          "example": [
-                            "account was verified before"
-                          ],
-                          "items": {
-                            "type": "string"
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "verify": {
+                              "type": "array",
+                              "example": [
+                                "account was verified before"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            }
                           }
                         }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2147,12 +2266,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2162,12 +2280,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2194,32 +2311,40 @@
           "Authentication"
         ],
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta_200OK"
-                    }
-                  }
-                }
-              }
-            }
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_400BadRequest"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "array",
+                              "example": [
+                                "code must be at least 6 digit number",
+                                "code can't be empty",
+                                "only accept numeric value"
+                              ],
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2229,12 +2354,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_401Unauthorized"
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -2244,12 +2368,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "meta": {
+                  "allOf": [
+                    {
                       "$ref": "#/components/schemas/Meta_500InternalServerError"
                     }
-                  }
+                  ]
                 }
               }
             }
